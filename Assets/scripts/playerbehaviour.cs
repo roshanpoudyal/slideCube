@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class playerbehaviour : MonoBehaviour {
 	private float moveSpeed = 50f;
@@ -15,7 +16,6 @@ public class playerbehaviour : MonoBehaviour {
 
 	void OnTriggerEnter(Collider allTriggers){
 		Destroy (allTriggers.gameObject);
-		print ("Game over!");
 	}
 
 	// Update is called once per frame
