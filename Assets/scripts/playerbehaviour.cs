@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class playerbehaviour : MonoBehaviour {
 	private float moveSpeed = 50f;
@@ -12,12 +12,15 @@ public class playerbehaviour : MonoBehaviour {
 
 	public GameObject explosionobject;
 	public Renderer playerrenderer;
+	public Text gametext;
 
 	// this is called when the game is initialized
 	void Start (){
 		playercube = GetComponent<Rigidbody> ();
 
 		playerStartPosition = playercube.transform.position;
+
+		setplayertext ("start game");
 	}
 
 	// do this on entering destination trigger
@@ -49,7 +52,7 @@ public class playerbehaviour : MonoBehaviour {
 
 		switch(callfrom){
 		case "triggercalls":
-			print ("congratulations! game over");
+			setplayertext("congratulations! you win");
 			break;
 		
 		case "guardcalls":
@@ -58,11 +61,15 @@ public class playerbehaviour : MonoBehaviour {
 
 			// instantiate explosion prefab at players current position
 			Instantiate (explosionobject, transform.position, Quaternion.identity);
-			print ("enemey killed the player");
+
+			// reset the playercube to starting position
+			playercube.transform.position = playerStartPosition;
+
+			setplayertext ("enemey killed the player, wait for restart");
 			break;
 
 		case "groundcalls":
-			print ("player is falling");
+			setplayertext ("player is falling, wait for restart");
 			break;
 
 		default :
@@ -72,8 +79,10 @@ public class playerbehaviour : MonoBehaviour {
 		//wait for some time
 		yield return new WaitForSeconds(4);
 
-		// reset the playercube to starting position
-		playercube.transform.position = playerStartPosition;
+		if (callfrom == "groundcalls") {
+			// reset the playercube to starting position
+			playercube.transform.position = playerStartPosition;
+		}
 
 		//display the player again
 		if(!playerrenderer.isVisible) {playerrenderer.enabled = true;}
@@ -81,8 +90,10 @@ public class playerbehaviour : MonoBehaviour {
 		// make the player able to move on getting keyboard input
 		// find a better way to make the player stop this is a workaround
 		moveSpeed = 50f;
+	}
 
-
+	void setplayertext(string stringtext){
+		gametext.text = stringtext;
 	}
 
 	// Update is called once per frame
