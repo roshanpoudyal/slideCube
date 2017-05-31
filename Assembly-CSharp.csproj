@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\scripts\explosionbehavior.cs" />
      <Compile Include="Assets\scripts\guardBehavior.cs" />
      <Compile Include="Assets\scripts\playerbehaviour.cs" />
      <Compile Include="Assets\scripts\triggerBehaviour.cs" />
