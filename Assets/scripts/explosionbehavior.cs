@@ -6,6 +6,6 @@ public class explosionbehavior : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Destroy (gameObject, 3f);
+		Destroy (gameObject, 1f);
 	}
 }

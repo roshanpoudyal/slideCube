@@ -18,5 +18,7 @@ public class triggerBehaviour : MonoBehaviour {
 	void Update () {
 		float lerp = Mathf.PingPong (Time.time, duration);
 		renderobject.material.Lerp (triggermaterial1, triggermaterial2, lerp);
+
+		transform.Rotate (new Vector3(90,0,0) * Time.deltaTime);
 	}
 }

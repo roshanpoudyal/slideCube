@@ -7,6 +7,7 @@ public class playerbehaviour : MonoBehaviour {
 	private float moveSpeed = 50f;
 	private float moveMaxSpeed = 52f;
 	private Vector3 playerMovement;
+	private bool playerCanMove = true; // set this to true at the start of the game
 	private Rigidbody playercube;
 	private Vector3 playerStartPosition;
 
@@ -26,10 +27,19 @@ public class playerbehaviour : MonoBehaviour {
 	// do this on entering destination trigger
 	void OnTriggerEnter(Collider allTriggers){
 		if (allTriggers.gameObject.name == "trigger") {
+			
+			//make the playercube stop
+			playerCanMove = false;
+
 			StartCoroutine (pauseGame ("triggercalls"));
 		}
 
-		if (allTriggers.gameObject.name == "guard") {
+		else if (allTriggers.gameObject.name == "guard") {
+			//make the playercube stop
+			playerCanMove = false;
+			// make the already moving playercube halt
+			playercube.velocity = new Vector3(0f,0f,0f);
+
 			StartCoroutine (pauseGame ("guardcalls"));
 		}
 	}
@@ -40,6 +50,9 @@ public class playerbehaviour : MonoBehaviour {
 	// is the only time when it exits collision, and thus
 	void OnCollisionExit(Collision exitcollisionfrom){
 		if (exitcollisionfrom.collider.name == "ground") {
+			//make the playercube stop
+			playerCanMove = false;
+
 			StartCoroutine (pauseGame ("groundcalls"));
 		}	
 	}
@@ -47,9 +60,6 @@ public class playerbehaviour : MonoBehaviour {
 	// this Coroutine is called by from ontriggerenter
 	// to make sure the player is repositioned when 
 	IEnumerator pauseGame(string callfrom) {
-		//make the playercube stop
-		moveSpeed = 0f;
-
 		switch(callfrom){
 		case "triggercalls":
 			setplayertext("congratulations! you win");
@@ -62,10 +72,10 @@ public class playerbehaviour : MonoBehaviour {
 			// instantiate explosion prefab at players current position
 			Instantiate (explosionobject, transform.position, Quaternion.identity);
 
+			setplayertext ("enemey killed the player, wait for restart");
+
 			// reset the playercube to starting position
 			playercube.transform.position = playerStartPosition;
-
-			setplayertext ("enemey killed the player, wait for restart");
 			break;
 
 		case "groundcalls":
@@ -79,7 +89,8 @@ public class playerbehaviour : MonoBehaviour {
 		//wait for some time
 		yield return new WaitForSeconds(4);
 
-		if (callfrom == "groundcalls") {
+		// when player wins or falls off the ground
+		if (callfrom != "guardcalls") {
 			// reset the playercube to starting position
 			playercube.transform.position = playerStartPosition;
 		}
@@ -89,7 +100,10 @@ public class playerbehaviour : MonoBehaviour {
 
 		// make the player able to move on getting keyboard input
 		// find a better way to make the player stop this is a workaround
-		moveSpeed = 50f;
+		playerCanMove = true;
+
+		// instruct for game start
+		setplayertext ("start game!");
 	}
 
 	void setplayertext(string stringtext){
@@ -97,16 +111,18 @@ public class playerbehaviour : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
-		float moveHorizontal = Input.GetAxisRaw ("Horizontal");
-		float moveVertical = Input.GetAxisRaw ("Vertical");
+	void FixedUpdate () {
+		if (playerCanMove) {
+			float moveHorizontal = Input.GetAxisRaw ("Horizontal");
+			float moveVertical = Input.GetAxisRaw ("Vertical");
 
-		playerMovement = new Vector3 (moveHorizontal,0.0f,moveVertical);
+			playerMovement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
 
-		// the condition below for the playercube speed makes the pickup faster 
-		// with the speed (snap and catches up with speed)
-		if (playercube.velocity.magnitude < moveMaxSpeed) {
-			playercube.AddForce (playerMovement * moveSpeed);
+			// the condition below for the playercube speed makes the pickup faster 
+			// with the speed (snap and catches up with speed)
+			if (playercube.velocity.magnitude < moveMaxSpeed) {
+				playercube.AddForce (playerMovement * moveSpeed);
+			}
 		}
 	}
 }
