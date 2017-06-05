@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AudioSource))]
 public class playerbehaviour : MonoBehaviour {
 	private float moveSpeed = 50f;
 	private float moveMaxSpeed = 52f;
@@ -15,19 +16,28 @@ public class playerbehaviour : MonoBehaviour {
 	public Renderer playerrenderer;
 	public Text gametext;
 
+	// all audio clips and audio source component
+	public AudioClip explosionsound;
+	public AudioClip fallingsound;
+	public AudioClip iwinsound;
+
+	private AudioSource audiosrc;
+
 	// this is called when the game is initialized
 	void Start (){
 		playercube = GetComponent<Rigidbody> ();
-
+		audiosrc = GetComponent<AudioSource> (); // get audio source component of player
 		playerStartPosition = playercube.transform.position;
 
-		setplayertext ("start game");
+		setplayertext ("Start Game!");
 	}
 
 	// do this on entering destination trigger
 	void OnTriggerEnter(Collider allTriggers){
 		if (allTriggers.gameObject.name == "trigger") {
-			
+			//play win sound
+			audiosrc.PlayOneShot(iwinsound, 1f);
+
 			//make the playercube stop
 			playerCanMove = false;
 
@@ -35,6 +45,9 @@ public class playerbehaviour : MonoBehaviour {
 		}
 
 		else if (allTriggers.gameObject.name == "guard") {
+			//play explosion sound
+			audiosrc.PlayOneShot(explosionsound, 1f);
+
 			//make the playercube stop
 			playerCanMove = false;
 			// make the already moving playercube halt
@@ -50,6 +63,9 @@ public class playerbehaviour : MonoBehaviour {
 	// is the only time when it exits collision, and thus
 	void OnCollisionExit(Collision exitcollisionfrom){
 		if (exitcollisionfrom.collider.name == "ground") {
+			// play falling sound
+			audiosrc.PlayOneShot(fallingsound, 1f);
+
 			//make the playercube stop
 			playerCanMove = false;
 
@@ -62,7 +78,7 @@ public class playerbehaviour : MonoBehaviour {
 	IEnumerator pauseGame(string callfrom) {
 		switch(callfrom){
 		case "triggercalls":
-			setplayertext("congratulations! you win");
+			setplayertext("Congratulations! You Win.");
 			break;
 		
 		case "guardcalls":
@@ -72,14 +88,14 @@ public class playerbehaviour : MonoBehaviour {
 			// instantiate explosion prefab at players current position
 			Instantiate (explosionobject, transform.position, Quaternion.identity);
 
-			setplayertext ("enemey killed the player, wait for restart");
+			setplayertext ("Enemey Killed The Player, Wait For Restart");
 
 			// reset the playercube to starting position
 			playercube.transform.position = playerStartPosition;
 			break;
 
 		case "groundcalls":
-			setplayertext ("player is falling, wait for restart");
+			setplayertext ("Player is Falling, Wait For Restart");
 			break;
 
 		default :
@@ -103,7 +119,7 @@ public class playerbehaviour : MonoBehaviour {
 		playerCanMove = true;
 
 		// instruct for game start
-		setplayertext ("start game!");
+		setplayertext ("Start Game!");
 	}
 
 	void setplayertext(string stringtext){
@@ -122,7 +138,7 @@ public class playerbehaviour : MonoBehaviour {
 			// with the speed (snap and catches up with speed)
 			if (playercube.velocity.magnitude < moveMaxSpeed) {
 				playercube.AddForce (playerMovement * moveSpeed);
-			}
+			} 
 		}
 	}
 }
