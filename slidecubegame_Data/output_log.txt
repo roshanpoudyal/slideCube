@@ -15,15 +15,10 @@ Platform assembly: C:\Users\Public\Documents\Unity Projects\slideCube\slidecubeg
 Loading C:\Users\Public\Documents\Unity Projects\slideCube\slidecubegame_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: C:\Users\Public\Documents\Unity Projects\slideCube\slidecubegame_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading C:\Users\Public\Documents\Unity Projects\slideCube\slidecubegame_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.138 seconds
+- Completed reload, in  0.112 seconds
 Platform assembly: C:\Users\Public\Documents\Unity Projects\slideCube\slidecubegame_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Public\Documents\Unity Projects\slideCube\slidecubegame_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 <RI> Initializing input.
 XInput1_3.dll not found. Trying XInput9_1_0.dll instead...
 <RI> Input initialized.
-<RI> Initialized touch support.
-UnloadTime: 2.293636 ms
-Setting up 2 worker threads for Enlighten.
-  Thread -> id: 118c -> priority: 1 
-  Thread -> id: 1214 -> priority: 1 
